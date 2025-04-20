@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QB Tablet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+</head>
+<body>
+    <div id="tablet" class="hidden">
+        <div class="tablet-header">
+            <div class="header-left">
+                <img src="img/logo.png" alt="Logo" class="logo">
+                <h1>Sistema Central</h1>
+            </div>
+            <div class="header-right">
+                <span id="current-time">00:00</span>
+                <button id="close-button"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        
+        <div class="tablet-content">
+            <div class="sidebar">
+                <div class="player-info">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 id="player-name">Nome do Jogador</h3>
+                    <p id="player-id">ID: 0</p>
+                </div>
+                
+                <div class="sidebar-menu">
+                    <div class="menu-item active" data-tab="home">
+                        <i class="fas fa-home"></i>
+                        <span>Início</span>
+                    </div>
+                    <div class="menu-item" data-tab="events">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Eventos</span>
+                    </div>
+                    <div class="menu-item" data-tab="venices">
+                        <i class="fas fa-coins"></i>
+                        <span>Venices</span>
+                    </div>
+                    <div class="menu-item" data-tab="missions">
+                        <i class="fas fa-tasks"></i>
+                        <span>Missões</span>
+                    </div>
+                    <div class="menu-item" data-tab="blackmarket">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Blackmarket</span>
+                    </div>
+                    <div class="menu-item" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <!-- Home Tab -->
+                <div id="home" class="tab-content active">
+                    <h2>Bem-vindo ao Sistema Central</h2>
+                    <div class="welcome-message">
+                        <p>Acesse todos os eventos e missões disponíveis no servidor através deste tablet.</p>
+                    </div>
+                    
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <div class="stat-info">
+                                <h4>Eventos Disponíveis</h4>
+                                <span id="available-events">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-coins"></i>
+                            <div class="stat-info">
+                                <h4>Total de Venices</h4>
+                                <span id="total-venices">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="featured-event">
+                        <h3>Evento em Destaque</h3>
+                        <div class="featured-event-card" id="featured-event-card">
+                            <div class="event-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="event-details">
+                                <h4 id="featured-event-name">Carregando...</h4>
+                                <p id="featured-event-desc">Carregando descrição do evento...</p>
+                            </div>
+                            <div class="event-action">
+                                <button class="start-event-button" data-event="0">Iniciar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Events Tab -->
+                <div id="events" class="tab-content">
+                    <h2>Eventos Disponíveis</h2>
+                    <div class="events-filter">
+                        <input type="text" id="event-search" placeholder="Pesquisar eventos...">
+                        <select id="event-filter">
+                            <option value="all">Todos</option>
+                            <option value="available">Disponíveis</option>
+                            <option value="locked">Bloqueados</option>
+                        </select>
+                    </div>
+                    
+                    <div id="events-list" class="events-list">
+                        <!-- Events will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Venices Tab -->
+                <div id="venices" class="tab-content">
+                    <h2>Suas Venices</h2>
+                    
+                    <div class="venices-cards">
+                        <div class="venice-card kryon">
+                            <div class="venice-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="venice-details">
+                                <h3>Kryon</h3>
+                                <p>Moeda premium do servidor</p>
+                                <div class="venice-amount">
+                                    <span id="kryon-amount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="venice-card vexel">
+                            <div class="venice-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="venice-details">
+                                <h3>Vexel</h3>
+                                <p>Moeda de eventos especiais</p>
+                                <div class="venice-amount">
+                                    <span id="vexel-amount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="venice-card zynther">
+                            <div class="venice-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="venice-details">
+                                <h3>Zynther</h3>
+                                <p>Moeda rara de elite</p>
+                                <div class="venice-amount">
+                                    <span id="zynther-amount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="venice-history">
+                        <h3>Histórico Recente</h3>
+                        <div class="history-list">
+                            <div class="history-item">
+                                <span class="history-icon"><i class="fas fa-plus-circle"></i></span>
+                                <span class="history-desc">Recompensa de Evento</span>
+                                <span class="history-amount positive">+10 Kryon</span>
+                            </div>
+                            <div class="history-item">
+                                <span class="history-icon"><i class="fas fa-minus-circle"></i></span>
+                                <span class="history-desc">Compra na Loja</span>
+                                <span class="history-amount negative">-5 Vexel</span>
+                            </div>
+                            <div class="history-item">
+                                <span class="history-icon"><i class="fas fa-plus-circle"></i></span>
+                                <span class="history-desc">Missão Especial</span>
+                                <span class="history-amount positive">+1 Zynther</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Missions Tab -->
+                <div id="missions" class="tab-content">
+                    <h2>Missões Disponíveis</h2>
+                    <div class="missions-container">
+                        <p>Em breve, novas missões estarão disponíveis!</p>
+                    </div>
+                </div>
+                
+                <!-- Settings Tab -->
+                <div id="settings" class="tab-content">
+                    <h2>Configurações</h2>
+                    <div class="settings-container">
+                        <div class="setting-item">
+                            <span>Notificações</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Som</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Mostrar ID nos Eventos</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Blackmarket Tab -->
+                <div id="blackmarket" class="tab-content">
+                    <h2>Blackmarket</h2>
+                    <div class="blackmarket-intro">
+                        <p>Bem-vindo à Blackmarket. Todos os itens são vendidos sem rastreamento e com total sigilo.</p>
+                    </div>
+                    
+                    <div class="blackmarket-filter">
+                        <input type="text" id="item-search" placeholder="Procurar itens...">
+                        <select id="category-filter">
+                            <option value="all">Todas Categorias</option>
+                            <option value="weapons">Armas</option>
+                            <option value="drugs">Drogas</option>
+                            <option value="hacking">Hacking</option>
+                            <option value="miscellaneous">Diversos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="blackmarket-items">
+                        <!-- Weapons -->
+                        <div class="market-item" data-category="weapons">
+                            <div class="item-image">
+                                <i class="fas fa-gun"></i>
+                            </div>
+                            <div class="item-info">
+                                <h3>Pistola</h3>
+                                <p>Arma de fogo básica e confiável</p>
+                                <div class="item-price">
+                                    <div class="price-tag"><i class="fas fa-gem"></i> 50 Kryon</div>
+                                </div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-item-btn" data-item="weapon_pistol" data-price="50" data-currency="kryon">Comprar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="market-item" data-category="weapons">
+                            <div class="item-image">
+                                <i class="fas fa-gun"></i>
+                            </div>
+                            <div class="item-info">
+                                <h3>SMG Compacta</h3>
+                                <p>Arma automática com alto poder de fogo</p>
+                                <div class="item-price">
+                                    <div class="price-tag"><i class="fas fa-bolt"></i> 15 Vexel</div>
+                                </div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-item-btn" data-item="weapon_smg" data-price="15" data-currency="vexel">Comprar</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Drugs -->
+                        <div class="market-item" data-category="drugs">
+                            <div class="item-image">
+                                <i class="fas fa-cannabis"></i>
+                            </div>
+                            <div class="item-info">
+                                <h3>Pacote de Cannabis</h3>
+                                <p>10 unidades de cannabis de alta qualidade</p>
+                                <div class="item-price">
+                                    <div class="price-tag"><i class="fas fa-gem"></i> 25 Kryon</div>
+                                </div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-item-btn" data-item="weed_package" data-price="25" data-currency="kryon">Comprar</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Hacking -->
+                        <div class="market-item" data-category="hacking">
+                            <div class="item-image">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="item-info">
+                                <h3>Dispositivo de Hacking</h3>
+                                <p>Equipamento para destravar sistemas eletrônicos</p>
+                                <div class="item-price">
+                                    <div class="price-tag"><i class="fas fa-fire"></i> 2 Zynther</div>
+                                </div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-item-btn" data-item="hacking_device" data-price="2" data-currency="zynther">Comprar</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Miscellaneous -->
+                        <div class="market-item" data-category="miscellaneous">
+                            <div class="item-image">
+                                <i class="fas fa-mask"></i>
+                            </div>
+                            <div class="item-info">
+                                <h3>Máscara de Roubo</h3>
+                                <p>Esconde sua identidade durante atividades criminosas</p>
+                                <div class="item-price">
+                                    <div class="price-tag"><i class="fas fa-gem"></i> 15 Kryon</div>
+                                </div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-item-btn" data-item="robbery_mask" data-price="15" data-currency="kryon">Comprar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="market-item" data-category="miscellaneous">
+                            <div class="item-image">
+                                <i class="fas fa-toolbox"></i>
+                            </div>
+                            <div class="item-info">
+                                <h3>Kit de Lockpick</h3>
+                                <p>Conjunto profissional para abrir fechaduras</p>
+                                <div class="item-price">
+                                    <div class="price-tag"><i class="fas fa-gem"></i> 20 Kryon</div>
+                                </div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-item-btn" data-item="lockpick_kit" data-price="20" data-currency="kryon">Comprar</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal de confirmação de compra -->
+                    <div id="purchase-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Confirmar Compra</h3>
+                                <span class="close-modal">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <p>Você tem certeza que deseja comprar <span id="modal-item-name">este item</span>?</p>
+                                <p>Preço: <span id="modal-item-price"></span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="confirm-purchase">Confirmar</button>
+                                <button id="cancel-purchase">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
