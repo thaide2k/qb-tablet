@@ -18,18 +18,18 @@ Config.Venices = {
 Config.Events = {
     -- Modelo de evento
     ['event_1'] = {
-        name = "Perseguição Implacável",
-        description = "Fuja dos perseguidores a todo custo. Sobreviva se puder!",
-        icon = "fas fa-car-crash",
-        script = "qb-chase3:server:startEvent", -- O script que será chamado para iniciar o evento
+        name = "Feira de Weed",
+        description = "Monte sua barraca de venda e atenda clientes para ganhar kryon",
+        icon = "fas fa-cannabis",
+        script = "feira", -- O script que será chamado para iniciar o evento
         data = { -- Dados específicos que serão passados para o script
             reward = {
-                kryon = 50
+                kryon = 1  -- Recompensa por cliente
             }
         },
         requirements = {
             venices = {
-                kryon = 5 -- Requer 5 kryon para iniciar
+                kryon = 1 -- Requer 5 kryon para iniciar
             },
             -- Outros requisitos podem ser adicionados aqui
         }
