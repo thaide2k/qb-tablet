@@ -21,12 +21,16 @@ QBCore.Functions.CreateCallback('qb-tablet:server:getPlayerInfo', function(sourc
                     vexel = tonumber(result[1].vexel) or 0,
                     zynther = tonumber(result[1].zynther) or 0
                 }
+                -- Sincroniza dados locais com o banco
+                Player.PlayerData.venices = venices
             else
                 -- Se não encontrar registro, cria um novo
                 MySQL.Async.execute(
                     'INSERT IGNORE INTO player_venices (citizenid, kryon, vexel, zynther) VALUES (?, ?, ?, ?)',
                     {citizenid, Config.StartingValues.kryon or 0, Config.StartingValues.vexel or 0, Config.StartingValues.zynther or 0}
                 )
+                venices = Config.StartingValues
+                Player.PlayerData.venices = venices
             end
             
             -- Obter eventos disponíveis

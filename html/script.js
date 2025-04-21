@@ -2,7 +2,6 @@
 let playerData = null;
 let eventsData = [];
 let activeTab = 'home';
-let currentItemData = null;
 let clockInterval = null;
 
 $(document).ready(function() {
@@ -42,14 +41,6 @@ $(document).ready(function() {
             closeTablet();
         } else if (data.type === 'updateVenices') {
             updateVenicesDisplay(data.venices);
-        } else if (data.type === 'purchaseResult') {
-            if (data.success) {
-                showNotification('Item comprado com sucesso!', 'success');
-                // Atualizar saldo do jogador
-                updateVenicesDisplay(data.venices);
-            } else {
-                showNotification(data.message, 'error');
-            }
         }
     });
     
@@ -95,88 +86,6 @@ $(document).ready(function() {
             closeTablet();
         }
     });
-    
-    // Blackmarket Functionality
-    
-    // Filtrar itens da Blackmarket
-    $('#item-search').on('input', function() {
-        filterMarketItems();
-    });
-    
-    // Filtrar por categoria
-    $('#category-filter').change(function() {
-        filterMarketItems();
-    });
-    
-    // Abrir modal ao clicar em comprar
-    $(document).on('click', '.buy-item-btn', function() {
-        const itemName = $(this).closest('.market-item').find('h3').text();
-        const itemId = $(this).data('item');
-        const price = $(this).data('price');
-        const currency = $(this).data('currency');
-        
-        // Armazenar dados do item atual
-        currentItemData = {
-            id: itemId,
-            name: itemName,
-            price: price,
-            currency: currency
-        };
-        
-        // Atualizar o modal com informações do item
-        $('#modal-item-name').text(itemName);
-        
-        // Definir o ícone da moeda com base na currency
-        let currencyIcon = '';
-        if (currency === 'kryon') {
-            currencyIcon = '<i class="fas fa-gem" style="color: #3498db;"></i>';
-        } else if (currency === 'vexel') {
-            currencyIcon = '<i class="fas fa-bolt" style="color: #2ecc71;"></i>';
-        } else if (currency === 'zynther') {
-            currencyIcon = '<i class="fas fa-fire" style="color: #e74c3c;"></i>';
-        }
-        
-        $('#modal-item-price').html(`${currencyIcon} ${price} ${currency.charAt(0).toUpperCase() + currency.slice(1)}`);
-        
-        // Exibir o modal
-        $('#purchase-modal').css('display', 'flex');
-    });
-    
-    // Fechar modal
-    $('.close-modal, #cancel-purchase').click(function() {
-        $('#purchase-modal').css('display', 'none');
-    });
-    
-    // Confirmar compra
-    $('#confirm-purchase').click(function() {
-        if (currentItemData) {
-            // Verificar se o jogador tem saldo suficiente
-            const playerCurrency = getPlayerVeniceAmount(currentItemData.currency);
-            
-            if (playerCurrency >= currentItemData.price) {
-                // Enviar para o servidor a requisição de compra
-                $.post('https://qb-tablet/buyMarketItem', JSON.stringify({
-                    itemId: currentItemData.id,
-                    price: currentItemData.price,
-                    currency: currentItemData.currency
-                }));
-                
-                // Fechar o modal
-                $('#purchase-modal').css('display', 'none');
-            } else {
-                // Mostrar erro de saldo insuficiente
-                showNotification('Saldo insuficiente para esta compra!', 'error');
-                $('#purchase-modal').css('display', 'none');
-            }
-        }
-    });
-    
-    // Fechar modal ao clicar fora dele
-    $(window).click(function(event) {
-        if (event.target == document.getElementById('purchase-modal')) {
-            $('#purchase-modal').css('display', 'none');
-        }
-    });
 });
 
 // Update clock display
@@ -213,6 +122,11 @@ function updateVenicesDisplay(venices) {
     
     // Update total
     $('#total-venices').text(calculateTotalVenices(venices));
+    
+    // Atualizar dados globais
+    if (playerData) {
+        playerData.venices = venices;
+    }
 }
 
 // Calculate total venices (weighted sum)
@@ -237,7 +151,7 @@ function setupEventsList(events) {
     });
 }
 
-// Create event card HTML - MODIFICADO: Removida checagem de requisitos
+// Create event card HTML
 function createEventCard(event, index) {
     // Sempre retorna true, ignorando requisitos
     const canStart = true;
@@ -274,17 +188,6 @@ function createEventCard(event, index) {
             </button>
         </div>
     </div>`;
-}
-
-// Check if player meets event requirements - MODIFICADO: Sempre retorna true
-function checkEventRequirements(requirements) {
-    return true; // Sempre retorna true, ignorando todos os requisitos
-}
-
-// Get player's venice amount for a specific currency
-function getPlayerVeniceAmount(currency) {
-    if (!playerData || !playerData.venices) return 0;
-    return playerData.venices[currency] || 0;
 }
 
 // Set featured event (random or based on criteria)
@@ -346,27 +249,6 @@ function startEvent(eventId) {
     
     // Optional: Close tablet after starting event
     closeTablet();
-}
-
-// Função para filtrar itens da Blackmarket
-function filterMarketItems() {
-    const searchTerm = $('#item-search').val().toLowerCase();
-    const category = $('#category-filter').val();
-    
-    $('.market-item').each(function() {
-        const itemName = $(this).find('h3').text().toLowerCase();
-        const itemDesc = $(this).find('p').text().toLowerCase();
-        const itemCategory = $(this).data('category');
-        
-        const matchesSearch = itemName.includes(searchTerm) || itemDesc.includes(searchTerm);
-        const matchesCategory = category === 'all' || itemCategory === category;
-        
-        if (matchesSearch && matchesCategory) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
-    });
 }
 
 // Função para mostrar notificações na interface

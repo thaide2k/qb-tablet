@@ -86,7 +86,7 @@ Config.Events = {
             venices = {
                 kryon = 30
             },
-            permission = "criminal" -- Apenas jogadores com job "criminal" podem ver/iniciar
+            --permission = "criminal" -- Apenas jogadores com job "criminal" podem ver/iniciar
         }
     }
 }

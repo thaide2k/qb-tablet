@@ -111,6 +111,12 @@ RegisterNUICallback('startEvent', function(data, cb)
     cb({status = 'ok'})
 end)
 
+-- Callback para compra de itens na Blackmarket
+RegisterNUICallback('buyMarketItem', function(data, cb)
+    TriggerServerEvent('qb-tablet:server:buyMarketItem', data)
+    cb({status = 'ok'})
+end)
+
 -- Funções auxiliares
 function loadAnimDict(dict)
     while not HasAnimDictLoaded(dict) do
